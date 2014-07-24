@@ -1,0 +1,33 @@
+.que.easyonamejs .answer {
+    padding: 0.3em;
+    width: auto;
+    display: inline;
+}
+.que.easyonamejs .answer input {
+    width: 65%;
+}
+.que.easyonamejs.applet {
+	width:520px;
+}
+.que.easyonamejs.author {
+		float: right;
+		font-style: italic ;
+		font-size: 10px;
+}
+#page-question-type-easyonamejs .mform .textareamonospace {
+    white-space: pre;
+    font-family: Andale Mono, Monaco, Courier New, DejaVu Sans Mono, monospace;
+}
+
+
+.que.easyonamejs span.answerlabel {
+    vertical-align: top;
+}
+
+
+.que.easyonamejs .arrowbutton {
+  background: #1979FA;
+  color: white;
+display: inline;
+
+}
