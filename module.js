@@ -10,7 +10,7 @@ M.qtype_easyonamejs = {
                     marvinController = new MarvinControllerClass(
                         sketcherInstance);
                     var pastePromise = marvinController.sketcherInstance
-                        .importStructure("mrv", newxmlStr);
+                        .importStructure("mol", newxmlStr);
                 });
             var MarvinControllerClass = (function() {
                 function MarvinControllerClass(
@@ -35,12 +35,12 @@ M.qtype_easyonamejs = {
         refreshBut.on("click", function() {
             var newxmlStr = document.getElementById(
                 'correct_answer' + slot).value;
-            MarvinJSUtil.getEditor("#EASYOMECHJS" + slot).then(
+            MarvinJSUtil.getEditor("#EASYONAMEJS" + slot).then(
                 function(sketcherInstance) {
                     marvinController = new MarvinControllerClass(
                         sketcherInstance);
                     var pastePromise = marvinController.sketcherInstance
-                        .importStructure("mrv", newxmlStr);
+                        .importStructure("mol", newxmlStr);
                 });
             var MarvinControllerClass = (function() {
                 function MarvinControllerClass(
@@ -94,6 +94,7 @@ M.qtype_easyonamejs = {
                 exportPromise = marvinController.sketcherInstance
                     .exportStructure("mol", null)
                 exportPromise.then(function(source) {
+                        source = source.replace("\n", 'MDL MOLFILE INSERTED\n');
 			Y.one(topnode + ' input.answer').set('value', source);
                 });
             }, this);
@@ -127,8 +128,8 @@ M.qtype_easyonamejs = {
         newIframe.src = marvinpath + "/editor.html";
         newIframe.className = "sketcher-frame";
         newIframe.id = appletid;
-        newIframe.width = width;
-        newIframe.height = height;
+        //newIframe.width = width;
+        //newIframe.height = height;
         newIframe.setAttribute("data-toolbars", "education");
         warningspan.appendChild(newIframe);
         var marvinController,
@@ -230,6 +231,8 @@ M.qtype_easyonamejs.init_getanswerstring = function(Y, moodle_version) {
                                     //var mdlmoldata = source.split("\n").join("\r\n");
                                     //mdlmoldata = encodeURIComponent(mdlmoldata);
 				//source = source.replace(/\n/g, "\\n");
+                                        //source = source.replace(/[\w\W]+?\n+?/,"MDL MOLFILE PRESENT");
+					source = source.replace("\n", 'MDL MOLFILE INSERTED\n');
 				        Y.one('#' + textfieldid).set('value', source);
                        
                     });

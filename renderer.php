@@ -77,16 +77,15 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
             ));
         }
         $toreplaceid = 'applet' . $qa->get_slot();
-        $toreplace   = html_writer::tag('span', get_string('enablejavaandjavascript', 'qtype_easyonamejs'), array(
-            'id' => $toreplaceid
+        $toreplace   = html_writer::tag('div', get_string('enablejavaandjavascript', 'qtype_easyonamejs'), array(
+            'id' => $toreplaceid, 'class' => 'resizable'
         ));
         if (!$placeholder) {
             $answerlabel = html_writer::tag('span', get_string('answer', 'qtype_easyonamejs', ''), array(
                 'class' => 'answerlabel'
             ));
             $result .= html_writer::tag('div', $answerlabel . $toreplace, array(
-                'class' => 'ablock'
-            ));
+                'class' => 'ablock'));
         }
         if ($qa->get_state() == question_state::$invalid) {
             $lastresponse = $this->get_last_response($qa);
@@ -110,7 +109,7 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
 //                'name' => $strippedanswerid
 //            ));
         } */
-      /*  if ($options->readonly) {
+        if ($options->readonly) {
             $currentanswer    = $qa->get_last_qt_var('answer');
             $strippedanswerid = "stripped_answer" . $qa->get_slot();
             $result .= html_writer::tag('textarea', $currentanswer, array(
@@ -130,7 +129,7 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
                 'name' => $correctanswerid,
                 'style' => 'display:none;'
             ));
-        }  */
+        }  
         $result .= html_writer::tag('div', $this->hidden_fields($qa), array(
             'class' => 'inputcontrol'
         ));

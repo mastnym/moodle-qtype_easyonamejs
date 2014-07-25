@@ -21,28 +21,20 @@
  * @copyright  2014 onwards Carl LeBlond 
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-global $qa;
+//global $qa;
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/question/type/shortanswer/question.php');
 $generatedfeedback = "";
 class qtype_easyonamejs_question extends qtype_shortanswer_question {
     public function compare_response_with_answer(array $response, question_answer $answer) {
  // Check to see if correct or not.
-        echo "response = <pre>".$response['answer']."</pre>";
-
-
-        echo "answer = <pre>".$answer->answer."</pre>";
-        //$anstemp = str_replace('<br/>', '\\n', $answer->answer);
-        //$anstemp = preg_replace("/\n/", "\\n'+\n'", $answer->answer);
-        //$anstemp = nl2br($answer->answer); 
-        //echo "anstemp = <pre>".$anstemp."</pre>";
 	$usrsmiles = $this->openbabel_convert_molfile($response['answer'], 'can');
         $anssmiles = $this->openbabel_convert_molfile($answer->answer, 'can');
 
-        echo "response smiles = <pre>".$usrsmiles."</pre>";
-        echo "answer smiles = <pre>".$anssmiles."</pre>";
+        //echo "response smiles = <pre>".$usrsmiles."</pre>";
+        //echo "answer smiles = <pre>".$anssmiles."</pre>";
 
-        if ($response['answer'] == $answer->answer) {
+        if ($usrsmiles == $anssmiles) {
             return true;
         } else {
             return false;
@@ -61,11 +53,9 @@ class qtype_easyonamejs_question extends qtype_shortanswer_question {
            1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
            2 => array("pipe", "r") // stderr is a file to write to
         );
-        $inchi = '';
+        $output = '';
 
-        //$molfile = "CC";
-        //echo $molfile;
-        $process = proc_open('/usr/bin/obabel -imol -o'.$format, $descriptorspec, $pipes);
+        $process = proc_open('/usr/bin/obabel -imol -o' . $format . ' --title', $descriptorspec, $pipes);
         //echo $process;
 
         if (is_resource($process)) {
@@ -79,7 +69,7 @@ class qtype_easyonamejs_question extends qtype_shortanswer_question {
             fwrite($pipes[0], $molfile);
             fclose($pipes[0]);
             //var_dump($pipes[1]);
-            $inchi = stream_get_contents($pipes[1]);
+            $output = stream_get_contents($pipes[1]);
             //echo "inchi=".$inchi;
             fclose($pipes[1]);
 
@@ -93,11 +83,11 @@ class qtype_easyonamejs_question extends qtype_shortanswer_question {
             //echo "error = $err";
 
             error_log("command returned $return_value\n");
-            error_log("InChI = " . trim($inchi));
+            error_log("outpur = " . trim($output));
             error_log("mol = $molfile");
             error_log("error = $err");
         }
-        return trim($inchi);
+        return trim($output);
     }
 
 
