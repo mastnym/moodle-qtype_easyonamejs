@@ -89,7 +89,7 @@ class qtype_easyonamejs_edit_form extends qtype_shortanswer_edit_form {
         $repeated = array();
         $answeroptions = array();
         $answeroptions[] = $mform->createElement('textarea', 'answer',
-                $label, array('size' => 40));
+                $label, array('row' => 1));
         $answeroptions[] = $mform->createElement('select', 'fraction',
                 get_string('grade'), $gradeoptions);
         $repeated[] = $mform->createElement('group', 'answeroptions',

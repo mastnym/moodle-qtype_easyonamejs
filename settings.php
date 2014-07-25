@@ -28,4 +28,8 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('qtype_easyonamejs_options/path',
                    get_string('easyonamejs_options', 'qtype_easyonamejs'),
                    get_string('configeasyonamejsoptions', 'qtype_easyonamejs'), '/marvin4js', PARAM_TEXT));
+
+    $settings->add(new admin_setting_configtext('qtype_easyonamejs_options/obabelpath',
+                   get_string('easyonamejsobabel_options', 'qtype_easyonamejs'),
+                   get_string('configeasyonamejsobabeloptions', 'qtype_easyonamejs'), '/usr/bin/obabel', PARAM_TEXT));
 }

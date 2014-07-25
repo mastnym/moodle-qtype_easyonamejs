@@ -48,14 +48,17 @@ class qtype_easyonamejs_question extends qtype_shortanswer_question {
         );
     }
     public function openbabel_convert_molfile($molfile, $format) {
+        $marvinjsconfig = get_config('qtype_easyonamejs_options');
         $descriptorspec = array(
            0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
            1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
            2 => array("pipe", "r") // stderr is a file to write to
         );
         $output = '';
+//        $process = proc_open('/usr/bin/obabel -imol -o' . $format . ' --title', $descriptorspec, $pipes);
+        $process = proc_open($marvinjsconfig->obabelpath . ' -imol -o' . $format . ' --title', $descriptorspec, $pipes);
 
-        $process = proc_open('/usr/bin/obabel -imol -o' . $format . ' --title', $descriptorspec, $pipes);
+
         //echo $process;
 
         if (is_resource($process)) {
