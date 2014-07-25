@@ -33,7 +33,6 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
     public function formulation_and_controls(question_attempt $qa, question_display_options $options) {
         global $CFG, $PAGE;
         $question        = $qa->get_question();
-        //$orderimportant  = $question->orderimportant;
         $questiontext    = $question->format_questiontext($qa);
         $placeholder     = false;
         $myanswerid      = "my_answer" . $qa->get_slot();
@@ -93,22 +92,6 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
                 'class' => 'validationerror'
             ));
         }
-       /* if (!$options->readonly) {
-            $question   = $qa->get_question();
-            $answertemp = $question->get_correct_response();
-//            if ($question->hideproducts == 0) {
-//                $strippedxml = $this->remove_xml_tags($answertemp['answer'], 'MEFlow');
-//            } else {
-//                $strippedxml = $this->remove_xml_tags($answertemp['answer'], 'MEFlow');
-//                $strippedxml = $this->remove_xml_tags($strippedxml, 'productList');
-//            }
-//            $strippedanswerid = "stripped_answer" . $qa->get_slot();
-//            $result .= html_writer::tag('textarea', $strippedxml, array(
-//                'id' => $strippedanswerid,
-//                'style' => 'display:none;',
-//                'name' => $strippedanswerid
-//            ));
-        } */
         if ($options->readonly) {
             $currentanswer    = $qa->get_last_qt_var('answer');
             $strippedanswerid = "stripped_answer" . $qa->get_slot();
@@ -118,7 +101,7 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
                 'name' => $strippedanswerid
             ));
             $answertemp = $question->get_correct_response();
-            // Buttons to show correct and user answers - yeah its a hack!
+            // Buttons to show correct and user answers!
             $result .= html_writer::tag('textarea', $qa->get_last_qt_var('answer'), array(
                 'id' => $myanswerid,
                 'name' => $myanswerid,
@@ -129,7 +112,7 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
                 'name' => $correctanswerid,
                 'style' => 'display:none;'
             ));
-        }  
+        }
         $result .= html_writer::tag('div', $this->hidden_fields($qa), array(
             'class' => 'inputcontrol'
         ));

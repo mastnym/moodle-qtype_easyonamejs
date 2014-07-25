@@ -29,15 +29,8 @@ class qtype_easyonamejs_edit_form extends qtype_shortanswer_edit_form {
         $PAGE->requires->css('/question/type/easyonamejs/easyonamejs_styles.css');
         $marvinjsconfig = get_config('qtype_easyonamejs_options');
         $marvinjspath   = $marvinjsconfig->path;
-
-//        $PAGE->requires->js(new moodle_url('http://' . $_SERVER['HTTP_HOST'] . $marvinjspath . '/js/promise-0.1.1.min.js'));
-//        $PAGE->requires->js(new moodle_url('http://' . $_SERVER['HTTP_HOST'] . $marvinjspath . '/js/marvinjslauncher.js'));
-
         $PAGE->requires->js(new moodle_url('http://www.scimersion.com:8080/marvinjs-14.7.7/js/promise-0.1.1.min.js'));
         $PAGE->requires->js(new moodle_url('http://www.scimersion.com:8080/marvinjs-14.7.7/js/marvinjslauncher.js'));
-
-
-
         $mform->addElement('static', 'answersinstruct',
             get_string('correctanswers', 'qtype_easyonamejs'), get_string('filloutoneanswer', 'qtype_easyonamejs'));
         $mform->closeHeaderBefore('answersinstruct');
@@ -72,18 +65,6 @@ class qtype_easyonamejs_edit_form extends qtype_shortanswer_edit_form {
             $CFG->version
         ));
     }
-/*    protected function get_per_answer_fields($mform, $label, $gradeoptions, &$repeatedoptions, &$answersoption) {
-        $repeated     = parent::get_per_answer_fields($mform, $label, $gradeoptions, $repeatedoptions, $answersoption);
-        $scriptattrs  = 'class = id_insert';
-        $insertbutton = $mform->createElement('button', 'insert',
-            get_string('insertfromeditor', 'qtype_easyonamejs'), $scriptattrs);
-        array_splice($repeated, 2, 0, array(
-            $insertbutton
-        ));
-        var_dump($repeated);
-        return $repeated;
-    } */
-
     protected function get_per_answer_fields($mform, $label, $gradeoptions,
             &$repeatedoptions, &$answersoption) {
         $repeated = array();
@@ -99,22 +80,14 @@ class qtype_easyonamejs_edit_form extends qtype_shortanswer_edit_form {
         $repeatedoptions['answer']['type'] = PARAM_RAW;
         $repeatedoptions['fraction']['default'] = 0;
         $answersoption = 'answers';
-
-	$scriptattrs  = 'class = id_insert';
+        $scriptattrs  = 'class = id_insert';
         $insertbutton = $mform->createElement('button', 'insert',
             get_string('insertfromeditor', 'qtype_easyonamejs'), $scriptattrs);
         array_splice($repeated, 2, 0, array(
             $insertbutton
         ));
-
         return $repeated;
     }
-
-
-
-
-
-
     protected function data_preprocessing($question) {
         $question = parent::data_preprocessing($question);
         return $question;

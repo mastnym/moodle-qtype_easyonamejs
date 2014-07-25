@@ -23,7 +23,8 @@ M.qtype_easyonamejs = {
                     function init() {
                         this.sketcherInstance.setDisplaySettings({
                             "cpkColoring": true,
-                            "lonePairsVisible": true
+                            "lonePairsVisible": true,
+                            "toolbars": "education"
                         });
                     };
                 return MarvinControllerClass;
@@ -162,7 +163,6 @@ M.qtype_easyonamejs = {
         var warningspan = document.getElementById('appletdiv');
         warningspan.innerHTML = '';
         var newIframe = document.createElement("iframe");
-        
         newIframe.src = marvinpath + "/editor.html";
         //newIframe.src = "http://www.scimersion.com:8080/marvinjs-14.7.7/editorws.html";
         newIframe.className = "sketcher-frame";
@@ -170,9 +170,6 @@ M.qtype_easyonamejs = {
         newIframe.width = "600";
         newIframe.height = "460";
         warningspan.appendChild(newIframe);
-
-
-
         //import structure
         var marvinController;
         MarvinJSUtil.getEditor("#MSketch").then(function(
@@ -227,18 +224,9 @@ M.qtype_easyonamejs.init_getanswerstring = function(Y, moodle_version) {
 
                     exportPromise = marvinController.sketcherInstance.exportStructure("mol", null);
                     exportPromise.then(function(source) {
-
-                                    //var mdlmoldata = source.split("\n").join("\r\n");
-                                    //mdlmoldata = encodeURIComponent(mdlmoldata);
-				//source = source.replace(/\n/g, "\\n");
-                                        //source = source.replace(/[\w\W]+?\n+?/,"MDL MOLFILE PRESENT");
 					source = source.replace("\n", 'MDL MOLFILE INSERTED\n');
 				        Y.one('#' + textfieldid).set('value', source);
-                       
                     });
-
-
-
                 });
             var MarvinControllerClass = (function() {
                 function MarvinControllerClass(
@@ -251,10 +239,11 @@ M.qtype_easyonamejs.init_getanswerstring = function(Y, moodle_version) {
                 }
                 MarvinControllerClass.prototype.init =
                     function init() {
-                        //this.sketcherInstance.setDisplaySettings({
-                        //    "cpkColoring": true,
-                        //    "lonePairsVisible": true
-                        //});
+                        this.sketcherInstance.setDisplaySettings({
+                            "cpkColoring": true,
+                            "lonePairsVisible": true,
+                            "toolbars": "education"
+                        });
                     };
                 return MarvinControllerClass;
             }());
