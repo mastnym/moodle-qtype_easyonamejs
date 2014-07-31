@@ -54,8 +54,7 @@ M.qtype_easyonamejs = {
                     function init() {
                         this.sketcherInstance.setDisplaySettings({
                             "cpkColoring": true,
-                            "lonePairsVisible": true,
-                            "toolbars": "education"
+                            "lonePairsVisible": true
                         });
                     };
                 return MarvinControllerClass;
