@@ -29,8 +29,9 @@ class qtype_easyonamejs_edit_form extends qtype_shortanswer_edit_form {
         $PAGE->requires->css('/question/type/easyonamejs/easyonamejs_styles.css');
         $marvinjsconfig = get_config('qtype_easyonamejs_options');
         $marvinjspath   = $marvinjsconfig->path;
-        $PAGE->requires->js(new moodle_url('http://www.scimersion.com:8080/marvinjs-14.7.7/js/promise-0.1.1.min.js'));
-        $PAGE->requires->js(new moodle_url('http://www.scimersion.com:8080/marvinjs-14.7.7/js/marvinjslauncher.js'));
+        $protocol = (empty($_SERVER['HTTPS']) or $_SERVER['HTTPS'] == 'off') ? 'http://' : 'https://';
+        $PAGE->requires->js(new moodle_url($protocol . $_SERVER['HTTP_HOST'] . $marvinjspath . '/js/promise-0.1.1.min.js'));
+        $PAGE->requires->js(new moodle_url($protocol . $_SERVER['HTTP_HOST'] . $marvinjspath . '/js/marvinjslauncher.js'));
         $mform->addElement('static', 'answersinstruct',
             get_string('correctanswers', 'qtype_easyonamejs'), get_string('filloutoneanswer', 'qtype_easyonamejs'));
         $mform->closeHeaderBefore('answersinstruct');
