@@ -50,7 +50,9 @@ class qtype_easyonamejs_question extends qtype_shortanswer_question {
            2 => array("pipe", "r") // Stderr is a file to write to.
         );
         $output = '';
-        $process = proc_open($marvinjsconfig->obabelpath . ' -imol -o' . $format . ' --title', $descriptorspec, $pipes);
+        $command = escapeshellarg($marvinjsconfig->obabelpath . ' -imol -o' . $format . ' --title');
+        
+        $process = proc_open($command, $descriptorspec, $pipes);
 
         if (is_resource($process)) {
             /* 0 => writeable handle connected to child stdin

@@ -78,7 +78,7 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
         }
         $toreplaceid = 'applet' . $qa->get_slot();
         $toreplace   = html_writer::tag('div', get_string('enablejavaandjavascript', 'qtype_easyonamejs'), array(
-            'id' => $toreplaceid, 'class' => 'resizable'
+            'id' => $toreplaceid, 'class' => 'easyonamejs resizable'
         ));
         if (!$placeholder) {
             $answerlabel = html_writer::tag('span', get_string('answer', 'qtype_easyonamejs', ''), array(
