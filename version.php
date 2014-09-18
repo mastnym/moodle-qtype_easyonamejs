@@ -24,15 +24,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-<<<<<<< HEAD
-<<<<<<< HEAD
 $plugin->version   = 2014091800;
-=======
-$plugin->version   = 2014090500;
->>>>>>> 7b8a64bb2f42f6c5ab2a9c6a20497ac2d1192b57
-=======
-$plugin->version   = 2014090500;
->>>>>>> 7b8a64bb2f42f6c5ab2a9c6a20497ac2d1192b57
 $plugin->requires  = 2012062500;
 $plugin->cron      = 0;
 $plugin->component = 'qtype_easyonamejs';
