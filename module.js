@@ -145,8 +145,7 @@ M.qtype_easyonamejs = {
                     stripped_answer_id).value);
         });
         var MarvinControllerClass = (function() {
-            function MarvinControllerClass(sketcherInstance,
-                cpkCheckbox, carbonCheckbox) {
+            function MarvinControllerClass(sketcherInstance) {
                 this.sketcherInstance = sketcherInstance;
                 this.sketcherInstance.setDisplaySettings({
                     "cpkColoring": true,
@@ -231,9 +230,7 @@ M.qtype_easyonamejs.init_getanswerstring = function(Y, moodle_version) {
                 });
             var MarvinControllerClass = (function() {
                 function MarvinControllerClass(
-                    sketcherInstance,
-                    cpkCheckbox, carbonCheckbox
-                ) {
+                    sketcherInstance) {
                     this.sketcherInstance =
                         sketcherInstance;
                     this.init();
