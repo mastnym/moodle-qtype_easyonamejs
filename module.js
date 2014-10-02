@@ -89,17 +89,17 @@ M.qtype_easyonamejs = {
                 return MarvinControllerClass;
             }());
             var inputdiv = Y.one(topnode);
-            inputdiv.ancestor('form').on('submit', function(e) {
-                 //e.preventDefault();
-                 //alert(e.target.get('href'));
-		 //console.log(e.target.get('href'));
+            var inputdiv = Y.one(topnode);
+            if (inputdiv.ancestor('form') != null) {
+                inputdiv.ancestor('form').on('submit', function(e) {
                 exportPromise = marvinController.sketcherInstance
                     .exportStructure("mol", null)
                 exportPromise.then(function(source) {
                         source = source.replace("\n", 'MDL MOLFILE INSERTED\n');
 			Y.one(topnode + ' input.answer').set('value', source);
-                });
-            }, this);
+                    });
+                }, this);
+            }
         }
     },
     show_error: function(Y, topnode) {
