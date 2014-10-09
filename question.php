@@ -29,6 +29,14 @@ class qtype_easyonamejs_question extends qtype_shortanswer_question {
         // Check to see if correct or not.
         $usrsmiles = $this->openbabel_convert_molfile($response['answer'], 'can');
         $anssmiles = $this->openbabel_convert_molfile($answer->answer, 'can');
+
+       // echo "usersmiles=".$response['answer'];
+       // echo "anssmiles=".$answer->answer;
+
+
+       // echo "usersmiles=".$usrsmiles;
+       // echo "anssmiles=".$anssmiles;
+
         if ($usrsmiles == $anssmiles) {
             return true;
         } else {
@@ -50,14 +58,17 @@ class qtype_easyonamejs_question extends qtype_shortanswer_question {
            2 => array("pipe", "r") // Stderr is a file to write to.
         );
         $output = '';
-        $command = escapeshellarg($marvinjsconfig->obabelpath . ' -imol -o' . $format . ' --title');
+        echo $marvinjsconfig->obabelpath;
+        //$command = escapeshellarg($marvinjsconfig->obabelpath . ' -imol -o' . $format . ' --title');
+        $command = $marvinjsconfig->obabelpath . ' -imol -o' . $format . ' --title';
         
         $process = proc_open($command, $descriptorspec, $pipes);
-
+        print_object($process);
         if (is_resource($process)) {
             /* 0 => writeable handle connected to child stdin
                1 => readable handle connected to child stdout
                2 +> errors */
+            print_object($pipes);
             fwrite($pipes[0], $molfile);
             fclose($pipes[0]);
             $output = stream_get_contents($pipes[1]);
@@ -65,7 +76,8 @@ class qtype_easyonamejs_question extends qtype_shortanswer_question {
 
             $err = stream_get_contents($pipes[2]);
             fclose($pipes[2]);
-
+            echo $output;
+            echo $err;
             // It is important that you close any pipes before calling,
             // proc_close in order to avoid a deadlock.
             $returnvalue = proc_close($process);
