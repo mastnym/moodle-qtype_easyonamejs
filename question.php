@@ -30,13 +30,6 @@ class qtype_easyonamejs_question extends qtype_shortanswer_question {
         $usrsmiles = $this->openbabel_convert_molfile($response['answer'], 'can');
         $anssmiles = $this->openbabel_convert_molfile($answer->answer, 'can');
 
-       // echo "usersmiles=".$response['answer'];
-       // echo "anssmiles=".$answer->answer;
-
-
-       // echo "usersmiles=".$usrsmiles;
-       // echo "anssmiles=".$anssmiles;
-
         if ($usrsmiles == $anssmiles) {
             return true;
         } else {
