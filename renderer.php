@@ -93,6 +93,16 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
                 'class' => 'validationerror'
             ));
         }
+
+            $currentanswer    = $qa->get_last_qt_var('answer');
+            $strippedanswerid = "stripped_answer" . $qa->get_slot();
+            $result .= html_writer::tag('textarea', $currentanswer, array(
+                'id' => $strippedanswerid,
+                'style' => 'display:none;',
+                'name' => $strippedanswerid
+            ));
+
+
         if ($options->readonly) {
             $currentanswer    = $qa->get_last_qt_var('answer');
             $strippedanswerid = "stripped_answer" . $qa->get_slot();
