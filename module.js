@@ -89,14 +89,10 @@ M.qtype_easyonamejs = {
                 return MarvinControllerClass;
             }());
 
-                //console.log(topnode);
                 var inputform = Y.one(topnode).ancestor('form');
-                //console.log(inputform);
 
                 var nextbutton = inputform.one('input[type=submit]');
                 nextbutton.on('mousedown', function(e) {
-                        //console.log('Button Clicked');
-                        nextbutton.set('value', true);
 		        exportPromise = marvinController.sketcherInstance.exportStructure("mol", null);
 		        exportPromise.then(function(source) {
 		                source = source.replace("\n", 'MDL MOLFILE INSERTED\n');
@@ -105,22 +101,25 @@ M.qtype_easyonamejs = {
 
                 }, this);
 
+                var navbuttons = Y.all('a[id^="quiznavbutton"]');
+                navbuttons.on('mousedown', function(e) {
+		        exportPromise = marvinController.sketcherInstance.exportStructure("mol", null);
+		        exportPromise.then(function(source) {
+		                source = source.replace("\n", 'MDL MOLFILE INSERTED\n');
+				Y.one(topnode + ' input.answer').set('value', source);
+		        }, this);
+                }, this);
+
+
+
 
                 var inputdiv = Y.one(topnode);
-                //alert(inputdiv);
-                //console.log(inputdiv);
-//            var inputdiv = Y.one(topnode);
             if (inputdiv.ancestor('form') != null) {
                 inputdiv.ancestor('form').on('submit', function(e) {
-                //e.preventDefault();
-                //e.stopImmediatePropagation()
-                //e.stopPropagation();
                 exportPromise = marvinController.sketcherInstance.exportStructure("mol", null);
                 exportPromise.then(function(source) {
                         source = source.replace("\n", 'MDL MOLFILE INSERTED\n');
 			Y.one(topnode + ' input.answer').set('value', source);
-                        //console.log(inputdiv.ancestor('form'));
-                        //inputdiv.ancestor('form').submit();
                     });
                 }, this);
             }
