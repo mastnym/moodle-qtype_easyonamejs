@@ -95,12 +95,14 @@ M.qtype_easyonamejs = {
 
                 var nextbutton = inputform.one('input[type=submit]');
                 nextbutton.on('mousedown', function(e) {
+                        e.preventDefault();
                         //console.log('Button Clicked');
                         nextbutton.set('value', true);
 		        exportPromise = marvinController.sketcherInstance.exportStructure("mol", null);
 		        exportPromise.then(function(source) {
 		                source = source.replace("\n", 'MDL MOLFILE INSERTED\n');
 				Y.one(topnode + ' input.answer').set('value', source);
+                                //inputdiv.ancestor('form').submit();
 		        }, this);
 
                 }, this);
