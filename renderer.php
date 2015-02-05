@@ -34,7 +34,6 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
         global $CFG, $PAGE;
         $question        = $qa->get_question();
         $questiontext    = $question->format_questiontext($qa);
-        $placeholder     = false;
         $uniqid = uniqid();          
         $myanswerid      = "my_answer" . $uniqid;
         $correctanswerid = "correct_answer" . $uniqid;
