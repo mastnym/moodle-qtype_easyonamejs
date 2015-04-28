@@ -101,6 +101,16 @@ M.qtype_easyonamejs = {
 
                 }, this);
 
+                var previewsubmit = inputform.one('input[name="finish"]');;
+                previewsubmit.on(['mousedown', 'touchstart'], function(e) {
+		        exportPromise = marvinController.sketcherInstance.exportStructure("mol", null);
+		        exportPromise.then(function(source) {
+		                source = source.replace("\n", 'MDL MOLFILE INSERTED\n');
+				Y.one(topnode + ' input.answer').set('value', source);
+		        }, this);
+
+                }, this);
+
                 var navbuttons = Y.all('a[id^="quiznavbutton"]');
                 navbuttons.on('mousedown', function(e) {
 		        exportPromise = marvinController.sketcherInstance.exportStructure("mol", null);
@@ -110,10 +120,7 @@ M.qtype_easyonamejs = {
 		        }, this);
                 }, this);
 
-
-
-
-                var inputdiv = Y.one(topnode);
+           /*     var inputdiv = Y.one(topnode);
             if (inputdiv.ancestor('form') != null) {
                 inputdiv.ancestor('form').on('submit', function(e) {
                 exportPromise = marvinController.sketcherInstance.exportStructure("mol", null);
@@ -122,7 +129,7 @@ M.qtype_easyonamejs = {
 			Y.one(topnode + ' input.answer').set('value', source);
                     });
                 }, this);
-            }
+            } */
         }
     },
     show_error: function(Y, topnode) {

@@ -49,7 +49,6 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
             'class' => 'qtext'
         ));
         if ($options->readonly) {
-echo "readonly";
             $result .= html_writer::tag('input', '', array(
                 'id' => 'myresponse' . $uniqid,
                 'type' => 'button',
