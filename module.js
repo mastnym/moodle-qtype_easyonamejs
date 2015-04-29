@@ -66,7 +66,8 @@ M.qtype_easyonamejs = {
         topnode, feedback, readonly, stripped_answer_id, moodleurl,
         marvinpath) {
         var javaparams = ['mol', Y.one(topnode + ' input.mol').get(
-            'value')];
+            'value')]; var newxmlStr = document.getElementById('my_answer' +
+                slot).value;
         var easyonamejsoptions = new Array();
         if (!this.show_java(toreplaceid, appletid, name, 600, 460,
             'chemaxon.marvin.applet.JMSketchLaunch', javaparams,
@@ -259,6 +260,57 @@ M.qtype_easyonamejs.init_getanswerstring = function(Y, moodle_version) {
 					source = source.replace("\n", 'MDL MOLFILE INSERTED\n');
 				        Y.one('#' + textfieldid).set('value', source);
                     });
+                });
+            var MarvinControllerClass = (function() {
+                function MarvinControllerClass(
+                    sketcherInstance) {
+                    this.sketcherInstance =
+                        sketcherInstance;
+                    this.init();
+                }
+                MarvinControllerClass.prototype.init =
+                    function init() {
+                        this.sketcherInstance.setDisplaySettings({
+                            "cpkColoring": true,
+                            "lonePairsVisible": true,
+                            "toolbars": "education"
+                        });
+                    };
+                return MarvinControllerClass;
+            }());
+        });
+    });
+};
+
+M.qtype_easyonamejs.init_viewanswerstring = function(Y, moodle_version) {
+    var handleSuccess = function(o) {};
+    var handleFailure = function(o) {
+        /*failure handler code*/
+    };
+    var callback = {
+        success: handleSuccess,
+        failure: handleFailure
+    };
+    if (moodle_version >= 2012120300) { //Moodle 2.4 or higher
+        YAHOO = Y.YUI2;
+    }
+    Y.all(".id_view").each(function(node) {
+        node.on("click", function() {
+            var marvinController,
+                inputController;
+            MarvinJSUtil.getEditor("#MSketch").then(
+                function(sketcherInstance) {
+                    marvinController = new MarvinControllerClass(
+                        sketcherInstance);
+                    var buttonid = node.getAttribute(
+                        'id');
+                    var textfieldid = 'id_answer_' +
+                        buttonid.substr(buttonid.length -
+                            1);
+
+                   var newxmlStr = Y.one('#' + textfieldid).get('value');
+
+                   var pastePromise = marvinController.sketcherInstance.importStructure("mol", newxmlStr);
                 });
             var MarvinControllerClass = (function() {
                 function MarvinControllerClass(

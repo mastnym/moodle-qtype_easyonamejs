@@ -76,3 +76,4 @@ $string['pleaseenterananswer'] = 'Please enter an answer.';
 $string['easyonamejseditor'] = 'MarvinJS Editor';
 $string['author'] = 'Question type courtesy of<br />CL and JF,<br />Indiana University of Pennsylvania';
 $string['insert'] = 'Insert from editor';
+$string['view'] = 'View in editor';
