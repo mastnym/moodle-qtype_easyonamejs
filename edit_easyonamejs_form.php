@@ -36,7 +36,8 @@ class qtype_easyonamejs_edit_form extends qtype_shortanswer_edit_form {
             get_string('correctanswers', 'qtype_easyonamejs'), get_string('filloutoneanswer', 'qtype_easyonamejs'));
         $mform->closeHeaderBefore('answersinstruct');
         $mform->addElement('html', html_writer::start_tag('div', array(
-            'style' => 'width:650px;',
+        //    'style' => 'width:650px;',
+            'class' => 'easyonamejs resizable',
             'id' => 'appletdiv'
         )));
 
@@ -68,6 +69,9 @@ class qtype_easyonamejs_edit_form extends qtype_shortanswer_edit_form {
         $PAGE->requires->js_init_call('M.qtype_easyonamejs.init_viewanswerstring', array(
             $CFG->version
         ));
+        $PAGE->requires->js_init_call('M.qtype_easyonamejs.init_viewanswerstring', array(
+            $CFG->version
+        ));
     }
     protected function get_per_answer_fields($mform, $label, $gradeoptions,
             &$repeatedoptions, &$answersoption) {
@@ -85,12 +89,9 @@ class qtype_easyonamejs_edit_form extends qtype_shortanswer_edit_form {
         $repeatedoptions['fraction']['default'] = 0;
         $answersoption = 'answers';
         $scriptattrs  = 'class = id_insert';
-
         $viewbutton = $mform->createElement('button', 'view',
             get_string('view', 'qtype_easyonamejs'), 'class = id_view');
-        array_splice($repeated, 1, 0, array(
-            $viewbutton
-        ));
+        array_splice($repeated, 1, 0, array($viewbutton));
         $insertbutton = $mform->createElement('button', 'insert',
             get_string('insertfromeditor', 'qtype_easyonamejs'), $scriptattrs);
         array_splice($repeated, 1, 0, array(
