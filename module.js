@@ -91,7 +91,7 @@ M.qtype_easyonamejs = {
             }());
 
                 var inputform = Y.one(topnode).ancestor('form');
-
+                if (inputform != null) {
                 var nextbutton = inputform.one('input[type=submit]');
                 nextbutton.on('mousedown', function(e) {
 		        exportPromise = marvinController.sketcherInstance.exportStructure("mol", null);
@@ -101,8 +101,10 @@ M.qtype_easyonamejs = {
 		        }, this);
 
                 }, this);
+                var previewsubmit = inputform.one('input[name="finish"]');
+                }
 
-		var previewsubmit = inputform.one('input[name="finish"]');
+		
                 if (previewsubmit != null) {
                 previewsubmit.on(['mousedown', 'touchstart'], function(e) {
 		        exportPromise = marvinController.sketcherInstance.exportStructure("mol", null);
