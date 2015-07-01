@@ -50,3 +50,7 @@ display: inline;
 	overflow: hidden;
 	background-color: transparent;
 }
+
+.que.easyonamejs .license .logo{
+    margin-top: 20px;
+}
