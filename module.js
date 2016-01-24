@@ -24,7 +24,7 @@ M.qtype_easyonamejs = {
                         this.sketcherInstance.setDisplaySettings({
                             "cpkColoring": true,
                             "lonePairsVisible": true,
-                            "toolbars": "education"
+                            "toolbars": "reporting"
                         });
                     };
                 return MarvinControllerClass;
@@ -55,7 +55,7 @@ M.qtype_easyonamejs = {
                         this.sketcherInstance.setDisplaySettings({
                             "cpkColoring": true,
                             "lonePairsVisible": true,
-                            "toolbars": "education"
+                            "toolbars": "reporting"
                         });
                     };
                 return MarvinControllerClass;
@@ -167,7 +167,7 @@ M.qtype_easyonamejs = {
         newIframe.id = appletid;
         //newIframe.width = width;
         //newIframe.height = height;
-        newIframe.setAttribute("data-toolbars", "education");
+        newIframe.setAttribute("data-toolbars", "reporting");
         warningspan.appendChild(newIframe);
         var marvinController,
             inputController;
@@ -185,7 +185,7 @@ M.qtype_easyonamejs = {
                 this.sketcherInstance.setDisplaySettings({
                     "cpkColoring": true,
                     "lonePairsVisible": true,
-                    "toolbars": "education"
+                    "toolbars": "reporting"
                 });
                 this.init();
             }
@@ -231,7 +231,7 @@ M.qtype_easyonamejs = {
                 this.sketcherInstance.setDisplaySettings({
                     "cpkColoring": true,
                     "lonePairsVisible": true,
-                    "toolbars": "education"
+                    "toolbars": "reporting"
                 });
             };
             return MarvinControllerClass;
@@ -282,7 +282,7 @@ M.qtype_easyonamejs.init_getanswerstring = function(Y, moodle_version) {
                         this.sketcherInstance.setDisplaySettings({
                             "cpkColoring": true,
                             "lonePairsVisible": true,
-                            "toolbars": "education"
+                            "toolbars": "reporting"
                         });
                     };
                 return MarvinControllerClass;
@@ -333,7 +333,7 @@ M.qtype_easyonamejs.init_viewanswerstring = function(Y, moodle_version) {
                         this.sketcherInstance.setDisplaySettings({
                             "cpkColoring": true,
                             "lonePairsVisible": true,
-                            "toolbars": "education"
+                            "toolbars": "reporting"
                         });
                     };
                 return MarvinControllerClass;
@@ -388,7 +388,7 @@ M.qtype_easyonamejs.init_viewanswerstring = function(Y, moodle_version) {
                         this.sketcherInstance.setDisplaySettings({
                             "cpkColoring": true,
                             "lonePairsVisible": true,
-                            "toolbars": "education"
+                            "toolbars": "reporting"
                         });
                     };
                 return MarvinControllerClass;
