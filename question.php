@@ -18,12 +18,15 @@
  *
  * @package    qtype
  * @subpackage easyonamejs
- * @copyright  2014 onwards Carl LeBlond 
+ * @copyright  2014 onwards Carl LeBlond
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/question/type/shortanswer/question.php');
 $generatedfeedback = "";
+global $PAGE;
+$PAGE->requires->strings_for_js(array('viewing_answer1'), 'qtype_easyonamejs');
+
 class qtype_easyonamejs_question extends qtype_shortanswer_question {
     public function compare_response_with_answer(array $response, question_answer $answer) {
         // Check to see if correct or not.
@@ -54,7 +57,7 @@ class qtype_easyonamejs_question extends qtype_shortanswer_question {
         //echo $marvinjsconfig->obabelpath;
         //$command = escapeshellarg($marvinjsconfig->obabelpath . ' -imol -o' . $format . ' --title');
         $command = $marvinjsconfig->obabelpath . ' -imol -o' . $format . ' --title';
-        
+
         $process = proc_open($command, $descriptorspec, $pipes);
         //print_object($process);
         if (is_resource($process)) {
