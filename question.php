@@ -25,7 +25,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/question/type/shortanswer/question.php');
 $generatedfeedback = "";
 global $PAGE;
-$PAGE->requires->strings_for_js(array('viewing_answer1'), 'qtype_easyonamejs');
+$PAGE->requires->strings_for_js(array('viewing_answer1', 'viewing_answer'), 'qtype_easyonamejs');
 
 class qtype_easyonamejs_question extends qtype_shortanswer_question {
     public function compare_response_with_answer(array $response, question_answer $answer) {

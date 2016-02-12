@@ -206,7 +206,6 @@ M.qtype_easyonamejs = {
 
         var newIframe = document.createElement("iframe");
         newIframe.src = marvinpath + "/editor.html";
-        //newIframe.src = "http://www.scimersion.com:8080/marvinjs-14.7.7/editorws.html";
         newIframe.className = "sketcher-frame";
         newIframe.id = "MSketch";
         newIframe.width = "600";
