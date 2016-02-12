@@ -372,7 +372,7 @@ M.qtype_easyonamejs.init_viewanswerstring = function(Y, moodle_version) {
 
                    var pastePromise = marvinController.sketcherInstance.importStructure("mol", newxmlStr);
                    var answernumber = parseInt(buttonid.substr(buttonid.length - 1), 10) + 1;
-                   Y.one('#answernumber').set('innerHTML', M.util.get_string('viewing_answer', 'qtype_easyonamejs') + answernumber);
+                   Y.one('#answernumber').set('innerHTML', M.util.get_string('viewing_answer', 'qtype_easyonamejs')+' ' + answernumber);
 
                 });
             var MarvinControllerClass = (function() {
