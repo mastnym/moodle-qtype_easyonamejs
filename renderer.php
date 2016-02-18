@@ -22,7 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
-$generatedfeedback = "";
 
 
 /**
@@ -50,7 +49,7 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
         $result = html_writer::tag('div', $questiontext, array(
             'class' => 'qtext'
         ));
-        if ($options->readonly) {
+        if ($options->correctness) {
             $result .= html_writer::tag('input', '', array(
                 'id' => 'myresponse' . $uniqid,
                 'type' => 'button',
