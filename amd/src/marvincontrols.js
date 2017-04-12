@@ -32,7 +32,7 @@ define(['jquery'], function($) {
                 webservicesurl = params.wsurl.endsWith("/") ? params.wsurl : params.wsurl + '/';
                 window.MarvinJSUtil.getEditor(params.editorid).then(function (sketcherInstance) {
                     sketcher = sketcherInstance;
-                    $(".marvin-overlay").removeClass("marvin-overlay");
+                    $(".marvin-overlay").remove();
                     if (params.defaultsettings){
                         var defaultsettings = window.JSON.parse(params.defaultsettings);
                         sketcher.setDisplaySettings(defaultsettings);
@@ -123,7 +123,7 @@ define(['jquery'], function($) {
             $(document).ready(function(){
                 window.MarvinJSUtil.getEditor(params.editorid).then(function (sketcherInstance) {
                     sketcher = sketcherInstance;
-                    $(".marvin-overlay").removeClass("marvin-overlay");
+                    $(".marvin-overlay").remove();
                     if (params.defaultsettings){
                         var defaultsettings = window.JSON.parse(params.defaultsettings);
                         sketcher.setDisplaySettings(defaultsettings);

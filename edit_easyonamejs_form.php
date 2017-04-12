@@ -36,7 +36,7 @@ class qtype_easyonamejs_edit_form extends qtype_shortanswer_edit_form {
         $mform->addElement('button', 'marvinsettingsset',get_string('marvinsettingsset', 'qtype_easyonamejs'));
         $mform->addElement('button', 'marvinsettingsget',get_string('marvinsettingsget', 'qtype_easyonamejs'));
         $mform->addElement('static', 'answersinstruct',
-            get_string('correctanswers', 'qtype_easyonamejs'), get_string('filloutoneanswer', 'qtype_easyonamejs'));
+            get_string('instructions', 'qtype_easyonamejs'), get_string('filloutoneanswer', 'qtype_easyonamejs'));
         $mform->closeHeaderBefore('answersinstruct');
         $mform->addElement('html', html_writer::start_tag('div', array(
             'class' => 'easyonamejs resizable',
@@ -72,7 +72,7 @@ class qtype_easyonamejs_edit_form extends qtype_shortanswer_edit_form {
 
             )));
         $this->add_per_answer_fields($mform,
-            get_string('answerno', 'qtype_easyonamejs', '{no}'), question_bank::fraction_options());
+            get_string('answerno', 'qtype_shortanswer', '{no}'), question_bank::fraction_options());
         $this->add_interactive_settings();
     }
     protected function get_per_answer_fields($mform, $label, $gradeoptions,

@@ -74,7 +74,7 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
         $iframe .= html_writer::end_tag('iframe');
         $iframe .= html_writer::end_tag('div');
 
-        $answerlabel = html_writer::tag('span', get_string('answer', 'qtype_easyonamejs', ''),
+        $answerlabel = html_writer::tag('span', get_string('answer', 'qtype_shortanswer', ''),
                         array(
                     'class' => 'answerlabel'
         ));
@@ -174,8 +174,11 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
                     'data-label-my' => get_string('my_answer', 'qtype_easyonamejs'),
                     'data-label-correct' => get_string('correct_answer', 'qtype_easyonamejs')
         ));
-        return $answerinput . $show_button;
-        
-        
+        return $answerinput . $show_button;   
+    }
+    
+    protected function info(question_attempt $qa, qbehaviour_renderer $behaviouroutput,
+            qtype_renderer $qtoutput, question_display_options $options, $number) {
+        return parent::info($qa, $behaviouroutput,$qtoutput, $options, $number) + "blah";
     }
 }
