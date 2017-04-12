@@ -25,11 +25,24 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
-    $settings->add(new admin_setting_configtext('qtype_easyonamejs_options/path',
+    $settings->add(new admin_setting_configtext('qtype_easyonamejs/path',
                    get_string('easyonamejs_options', 'qtype_easyonamejs'),
                    get_string('configeasyonamejsoptions', 'qtype_easyonamejs'), '/marvin4js', PARAM_TEXT));
-
-    $settings->add(new admin_setting_configtext('qtype_easyonamejs_options/obabelpath',
+    
+    $settings->add(new admin_setting_configcheckbox('qtype_easyonamejs/usews',
+                   get_string('easyonamejs_options_usews', 'qtype_easyonamejs'),
+                   get_string('easyonamejs_options_usews_desc', 'qtype_easyonamejs'), true));
+    
+    $settings->add(new admin_setting_configtext('qtype_easyonamejs/wsurl',
+                   get_string('easyonamejs_options_wsurl', 'qtype_easyonamejs'),
+                   get_string('easyonamejs_options_wsurl_desc', 'qtype_easyonamejs'), '/webservices', PARAM_TEXT));
+    
+    $settings->add(new admin_setting_configtext('qtype_easyonamejs/obabelpath',
                    get_string('easyonamejsobabel_options', 'qtype_easyonamejs'),
                    get_string('configeasyonamejsobabeloptions', 'qtype_easyonamejs'), '/usr/bin/obabel', PARAM_TEXT));
+    
+    $settings->add(new admin_setting_configtextarea('qtype_easyonamejs/defaultsettings',
+                   get_string('easyonamejsobabel_options_default_settings', 'qtype_easyonamejs'),
+                   get_string('easyonamejsobabel_options_default_settings_desc', 'qtype_easyonamejs'), '', PARAM_TEXT));
+    
 }

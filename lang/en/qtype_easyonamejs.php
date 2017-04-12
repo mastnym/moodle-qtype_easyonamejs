@@ -43,6 +43,17 @@ $string['pluginname'] = 'Chemistry - Name to Structure or Reaction (MarvinJS)';
 $string['pluginname_help'] = 'Students must draw  structure in which you predefine. You can ask questions such as;<ul><li>Draw (1S,2R)-2-methylcyclohexanol below?</li><li>Please draw the structure of water showing correct lone pairs"</li><li>Draw acetic acid and its dissociation?"</li></ul>Supports lone pair and radical electrons, charges, reactions, R/S, E/Z and many other features!';
 $string['easyonamejs_options'] = 'Path to MarvinJS installation';
 $string['easyonamejsobabel_options'] = 'Path to OpenBabel installation';
+$string['easyonamejs_options_usews'] = 'Use chemaxon webservices?';
+$string['easyonamejs_options_usews_desc'] = 'If checked Chemaxon webservices will be used as a main conversion tool. You need to have Chemaxon webservices properly set up (webservices.js file in MarvinJS folder)';
+$string['easyonamejs_options_wsurl'] = 'URL of Chemaxon webservices';
+$string['easyonamejs_options_wsurl_desc'] = 'This is the base URL for Chemaxon webservices, defaults to <code>/webservices</code>';
+$string['easyonamejsobabel_options_default_settings'] = 'Default display settings of MarvinJS editor';
+$string['easyonamejsobabel_options_default_settings_desc'] = 'Json string with default editor settings (each question allows separate editor settings). If empty, default editor settings will be used. Example: <code>{
+"cpkColoring": true,
+"lonePairsVisible": true,
+"toolbars": "reporting"
+}</code>';
+
 $string['pluginname_link'] = 'question/type/easyonamejs';
 $string['pluginnameadding'] = 'Adding a Name-to-Structure question';
 $string['pluginnameediting'] = 'Editing a Name-to-Structure question';
@@ -64,6 +75,9 @@ $string['filloutanswers'] = '<b><ul>
 <li>Press the "Insert from editor" button to insert the code into the answer box.</li>
 <li>Add addditional correct or incorrect answer in the optional fields below.</li>
 </ul></b>';
+$string['editorquestionsettings'] = 'MarvinJS display settings for this question. If empty global settings will be used.';
+$string['marvinsettingsget'] = 'Use current settings from editor below.';
+$string['marvinsettingsset'] = 'Set these options to editor below.';
 $string['insertfromeditor'] = 'Insert from editor';
 $string['javaneeded'] = 'To use this page you need a Java-enabled browser. Download the latest Java plug-in from {$a}.';
 $string['instructions'] = 'The ChemAxon ("mrv") representation of your model must be stored in the following field in order to be graded:';
@@ -77,7 +91,10 @@ $string['easyonamejseditor'] = 'MarvinJS Editor';
 $string['author'] = 'Question type courtesy of<br />CL and JF,<br />Indiana University of Pennsylvania';
 $string['insert'] = 'Insert from editor';
 $string['view'] = 'View in editor';
+$string['delete'] = 'Delete';
 $string['my_response'] = 'My Response';
-$string['correct_answer'] = 'Correct Answer';
+$string['correct_answer'] = 'Show correct Answer';
+$string['my_answer'] = 'Show my answer';
+$string['loading'] = 'Loading MarvinJS...';
 $string['viewing_answer1'] = 'Currently viewing answer 1';
 $string['viewing_answer'] = 'Currently viewing answer';

@@ -28,19 +28,19 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/questionlib.php');
 require_once($CFG->dirroot . '/question/engine/lib.php');
-require_once($CFG->dirroot . '/question/type/easyonamejs/question.php');
 require_once($CFG->dirroot . '/question/type/shortanswer/questiontype.php');
 
 class qtype_easyonamejs extends qtype_shortanswer {
     public function extra_question_fields() {
-        return array('question_easyonamejs', 'answers');
+        return array('question_easyonamejs', 'answers', 'marvinsettings');
     }
 
     public function questionid_column_name() {
         return 'question';
     }
-    protected function initialise_question_instance(question_definition $question, $questiondata) {
-        $questiondata->options->usecase = '';
-          parent::initialise_question_instance($question, $questiondata);
+
+    protected function fill_answer_fields($answer, $questiondata, $key, $context) {
+        //do not trim exported molfile molfile call grandparent
+        return question_type::fill_answer_fields($answer, $questiondata, $key, $context);
     }
 }

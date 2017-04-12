@@ -44,13 +44,74 @@ display: inline;
 	border: 0px;
 	resize: both;
 	width: auto;
-	height: 510px;
+	height: 580px;
 	min-width: 370px;
 	min-height: 370px;
 	overflow: hidden;
 	background-color: transparent;
+        position: relative;
 }
 
 .que.easyonamejs .license .logo{
     margin-top: 20px;
+}
+
+#page-question-type-easyonamejs div[id^=fitem_id_][id*=feedback_] {
+    background: #EEE;
+    margin-bottom: 2em;
+    margin-top: 0;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    border: 1px solid #BBB;
+    border-top: 0;
+}
+
+body#page-question-type-easyonamejs div[id^=fgroup_id_][id*=answeroptions_] {
+    background: #EEE;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    border: 1px solid #BBB;
+    border-bottom: 0;
+}
+body#page-question-type-easyonamejs div[id*=_id_answercontrols_], body#page-question-type-easyonamejs div[id*=_id_gradecontrols_]{
+    background: #EEE;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    border: 1px solid #BBB;
+    border-bottom: 0;
+    border-top: 0;
+}
+#page-question-type-easyonamejs #appletdiv {
+    margin-bottom: 10px;
+}
+
+.marvin-readonly {
+    pointer-events: none;
+    cursor: default;
+    filter: alpha(opacity=80);
+    opacity: 0.8;
+}
+.marvin-image{
+    cursor: pointer;
+}
+
+.marvin-overlay{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background-color: rgba(0,0,0,0.5); 
+  
+}
+.marvin-overlay div.loading{
+  color:white;
+  font-size: larger;
+  text-align: center;
+  vertical-align: middle;
 }

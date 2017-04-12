@@ -24,8 +24,8 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-$plugin->version   = 2016021200;
-$plugin->requires  = 2012062500;
+$plugin->version   = 2017041102;
+$plugin->requires  = 2015051100;
 $plugin->cron      = 0;
 $plugin->component = 'qtype_easyonamejs';
 $plugin->maturity  = MATURITY_STABLE;

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -23,7 +24,6 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-
 /**
  * Generates the output for easyonamejs questions.
  *
@@ -31,203 +31,151 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_easyonamejs_renderer extends qtype_renderer {
+
     public function formulation_and_controls(question_attempt $qa, question_display_options $options) {
         global $CFG, $PAGE, $OUTPUT;
-        $question        = $qa->get_question();
-        $questiontext    = $question->format_questiontext($qa);
-        $uniqid = uniqid();
-        $myanswerid      = "my_answer" . $uniqid;
-        $correctanswerid = "correct_answer" . $uniqid;
-        $marvinjsconfig  = get_config('qtype_easyonamejs_options');
-        $marvinjspath    = $marvinjsconfig->path;
+        $question = $qa->get_question();
+        $answerinputid = $qa->get_qt_field_name('answer');
+        $answer = $qa->get_last_qt_var('answer', '');
+        $feedbackimage = '';
+        $feedbackclass = '';
+        $marvinjsconfig = get_config('qtype_easyonamejs');
+
         $protocol = (empty($_SERVER['HTTPS']) or $_SERVER['HTTPS'] == 'off') ? 'http://' : 'https://';
-        $PAGE->requires->js(new moodle_url($protocol . $_SERVER['HTTP_HOST'] . $marvinjspath . '/gui/lib/promise-0.1.1.min.js'));
+        $marvinjspath = $marvinjsconfig->path;
+        $PAGE->requires->js(new moodle_url($protocol . $_SERVER['HTTP_HOST'] . $marvinjspath . '/gui/lib/promise-1.0.0.min.js'));
         $PAGE->requires->js(new moodle_url($protocol . $_SERVER['HTTP_HOST'] . $marvinjspath . '/js/marvinjslauncher.js'));
-        if (preg_match('/_____+/', $questiontext, $matches)) {
-            $placeholder = $matches[0];
-        }
-        $result = html_writer::tag('div', $questiontext, array(
-            'class' => 'qtext'
+
+
+        //render of question text
+        $result = html_writer::tag('div', $question->format_questiontext($qa), array(
+                    'class' => 'qtext'
         ));
+        // if answer is corrected
         if ($options->correctness) {
-            $result .= html_writer::tag('input', '', array(
-                'id' => 'myresponse' . $uniqid,
-                'type' => 'button',
-                'value' => get_string('my_response', 'qtype_easyonamejs')
-            ));
-            $result .= html_writer::tag('input', '', array(
-                'id' => 'corresponse' . $uniqid,
-                'type' => 'button',
-                'value' => get_string('correct_answer', 'qtype_easyonamejs')
-            ));
-            $this->page->requires->js_init_call('M.qtype_easyonamejs.showmyresponse', array(
-                $CFG->version,
-                $uniqid
-            ));
-            $this->page->requires->js_init_call('M.qtype_easyonamejs.showcorresponse', array(
-                $CFG->version,
-                $uniqid
-            ));
+            $fraction = $this->fraction_for_last_response($qa);
+            $feedbackimage = $this->feedback_image($fraction);
+            $feedbackclass = $this->feedback_class($fraction);
         }
-        $toreplaceid = 'applet' . $uniqid;
-        $toreplace   = html_writer::tag('div', get_string('enablejavaandjavascript', 'qtype_easyonamejs'), array(
-            'id' => $toreplaceid, 'class' => 'easyonamejs resizable'
-        ));
-        $answerlabel = html_writer::tag('span', get_string('answer', 'qtype_easyonamejs', ''), array(
-                'class' => 'answerlabel'
-            ));
-        $result .= html_writer::tag('div', $answerlabel . $toreplace, array(
-                'class' => 'ablock'));
-        if ($qa->get_state() == question_state::$invalid) {
-            $lastresponse = $this->get_last_response($qa);
-            $result .= html_writer::nonempty_tag('div', $question->get_validation_error($lastresponse), array(
-                'class' => 'validationerror'
-            ));
+        
+        // append html with "answer" text + div for MarvinJS iframe + iframe
+        $iframe = html_writer::start_tag('div', array('id' => $qa->get_qt_field_name('applet'), 'class' => 'easyonamejs resizable'));
+        $loading = html_writer::div(get_string('loading', 'qtype_easyonamejs'), 'loading');
+        $iframe .= html_writer::div($loading, 'marvin-overlay');
+        $editor_attributes = array('id' => 'MSketch', 'class' => 'sketcher-frame ' . $feedbackclass,
+            'src' => $marvinjspath . '/editor.html');
+        if ($marvinjsconfig->usews) {
+            $editor_attributes['src'] = $marvinjspath . '/editorws.html';
         }
-
-            $currentanswer    = $qa->get_last_qt_var('answer');
-            $strippedanswerid = "stripped_answer" . $uniqid;
-            $result .= html_writer::tag('textarea', $currentanswer, array(
-                'id' => $strippedanswerid,
-                'style' => 'display:none;',
-                'name' => $strippedanswerid
-            ));
-
         if ($options->readonly) {
-            $currentanswer    = $qa->get_last_qt_var('answer');
-            $strippedanswerid = "stripped_answer" . $uniqid;
-            $result .= html_writer::tag('textarea', $currentanswer, array(
-                'id' => $strippedanswerid,
-                'style' => 'display:none;',
-                'name' => $strippedanswerid
-            ));
-            $answertemp = $question->get_correct_response();
-            // Buttons to show correct and user answers!
-            $result .= html_writer::tag('textarea', $qa->get_last_qt_var('answer'), array(
-                'id' => $myanswerid,
-                'name' => $myanswerid,
-                'style' => 'display:none;'
-            ));
-            $result .= html_writer::tag('textarea', $answertemp['answer'], array(
-                'id' => $correctanswerid,
-                'name' => $correctanswerid,
-                'style' => 'display:none;'
+            $editor_attributes['class'] = $editor_attributes['class'] . ' marvin-readonly';
+        }
+        $iframe .= html_writer::start_tag('iframe', $editor_attributes);
+        $iframe .= html_writer::end_tag('iframe');
+        $iframe .= html_writer::end_tag('div');
+
+        $answerlabel = html_writer::tag('span', get_string('answer', 'qtype_easyonamejs', ''),
+                        array(
+                    'class' => 'answerlabel'
+        ));
+        $result .= html_writer::tag('div', $answerlabel . $iframe, array(
+                    'class' => 'ablock'));
+
+        // just append div with error
+        if ($qa->get_state() == question_state::$invalid) {
+            $lastresponse = $qa->get_last_qt_data();
+            $result .= html_writer::nonempty_tag('div', $question->get_validation_error($lastresponse),
+                            array(
+                        'class' => 'validationerror'
             ));
         }
-        $result .= html_writer::tag('div', $this->hidden_fields($qa), array(
-            'class' => 'inputcontrol'
+
+        $answerinput = html_writer::empty_tag('input',
+                        array(
+                    'type' => 'hidden',
+                    'id' => $answerinputid,
+                    'name' => $answerinputid,
+                    'value' => $answer
         ));
-        $this->require_js($toreplaceid, $qa, $options->readonly, $options->correctness, $uniqid);
-        $result .= html_writer::start_tag('div', array('class'=> 'licence_logo'));
-        $result .= html_writer::start_tag('a', array('href'=> 'http://www.chemaxon.com'));
-        $result .= html_writer::empty_tag('img', array(
-        'src'=>$OUTPUT->pix_url('chemaxon', 'qtype_easyonamejs'),
-        'alt'=>'ChemAxon Licence Logo',
-        'id' => 'chemaxon'));
+        
+        // this needs to be here to remember users answer - $answerinput is replaced on change
+        // so user can correct answers
+        $readonlyanswerinput = html_writer::empty_tag('input',
+                        array(
+                    'type' => 'hidden',
+                    'id' => $qa->get_qt_field_name('currentanswer'),
+                    'name' => $qa->get_qt_field_name('currentanswer'),
+                    'value' => $answer
+        ));
+
+        $result .= html_writer::tag('div', $answerinput . $readonlyanswerinput, array(
+                    'class' => 'inputcontrol'
+        ));
+        
+        
+        // add chemaxon logo
+        $result .= html_writer::start_tag('div', array('class' => 'licence_logo'));
+        $result .= html_writer::start_tag('a', array('href' => 'http://www.chemaxon.com'));
+        $result .= html_writer::empty_tag('img',
+                        array(
+                    'src' => $OUTPUT->pix_url('chemaxon', 'qtype_easyonamejs'),
+                    'alt' => 'ChemAxon Licence Logo',
+                    'id' => 'chemaxon'));
         $result .= html_writer::end_tag('a');
+        $result .= $feedbackimage;
         $result .= html_writer::end_tag('div');
+        $defaultsettings = isset($question->marvinsettings) && trim($question->marvinsettings) ? $question->marvinsettings : $marvinjsconfig->defaultsettings;
+        $PAGE->requires->js_call_amd('qtype_easyonamejs/marvincontrols', 'initquestion',
+                array(array('editorid' => $editor_attributes['id'],
+                    'answerinputid' => $answerinputid,
+                    'defaultsettings'=>$defaultsettings)));   
         return $result;
     }
-    protected function remove_xml_tags($xmlstring, $tag) {
-        $dom = new DOMDocument();
-        $dom->loadXML($xmlstring);
-        $featuredde1 = $dom->getElementsByTagName($tag);
-        $length      = $featuredde1->length;
-        for ($i = 0; $i < $length; $i++) {
-            $temp = $featuredde1->item(0); // Avoid calling a function twice!
-            $temp->parentNode->removeChild($temp);
-        }
-        return $dom->saveXML();
-    }
-    protected function general_feedback(question_attempt $qa) {
-        $question = $qa->get_question();
-        return $question->usecase . $qa->get_question()->format_generalfeedback($qa);
-    }
-    protected function require_js($toreplaceid, question_attempt $qa, $readonly, $correctness, $uniqid) {
-        global $PAGE, $CFG;
-        $marvinjsconfig = get_config('qtype_easyonamejs_options');
-        $protocol = (empty($_SERVER['HTTPS']) or $_SERVER['HTTPS'] == 'off') ? 'http://' : 'https://';
-        $marvinjspath   = $protocol. $_SERVER['HTTP_HOST'] . $marvinjsconfig->path;
-        $topnode        = 'div.que.easyonamejs#q' . $qa->get_slot();
-        $feedbackimage  = '';
-        if ($correctness) {
-            $feedbackimage = $this->feedback_image($this->fraction_for_last_response($qa));
-        }
-        $name             = 'EASYONAMEJS' . $uniqid;
-        $appletid         = 'easyonamejs' . $uniqid;
-        $strippedanswerid = "stripped_answer" . $uniqid;
-        $PAGE->requires->js_init_call('M.qtype_easyonamejs.insert_easyonamejs_applet', array(
-            $toreplaceid,
-            $name,
-            $appletid,
-            $topnode,
-            $feedbackimage,
-            $readonly,
-            $strippedanswerid,
-            $CFG->wwwroot,
-            $marvinjspath
-        ), false);
-    }
+
     protected function fraction_for_last_response(question_attempt $qa) {
-        $question     = $qa->get_question();
-        $lastresponse = $this->get_last_response($qa);
-        $answer       = $question->get_matching_answer($lastresponse);
-        if ($answer) {
-            $fraction = $answer->fraction;
-        } else {
-            $fraction = 0;
-        }
-        return $fraction;
+        $question = $qa->get_question();
+        $lastresponse = $qa->get_last_qt_data();
+        $answer = $question->get_matching_answer($lastresponse);
+        return $answer ? $answer->fraction : 0;
     }
-    protected function get_last_response(question_attempt $qa) {
-        $question       = $qa->get_question();
-        $responsefields = array_keys($question->get_expected_data());
-        $response       = array();
-        foreach ($responsefields as $responsefield) {
-            $response[$responsefield] = $qa->get_last_qt_var($responsefield);
-        }
-        return $response;
-    }
+
     public function specific_feedback(question_attempt $qa) {
         $question = $qa->get_question();
-        $answer   = $question->get_matching_answer($this->get_last_response($qa));
+        $answer = $question->get_matching_answer($qa->get_last_qt_data());
         if (!$answer) {
             return '';
         }
         $feedback = '';
         if ($answer->feedback) {
-            $feedback .= $question->format_text($answer->feedback, $answer->feedbackformat, $qa,
-            'question', 'answerfeedback', $answer->id);
+            $feedback .= $question->format_text($answer->feedback, $answer->feedbackformat, $qa, 'question',
+                    'answerfeedback', $answer->id);
         }
         return $feedback;
     }
+
     public function correct_response(question_attempt $qa) {
         $question = $qa->get_question();
-        $answer   = $question->get_matching_answer($question->get_correct_response());
-        if (!$answer) {
+        $correct_response = $question->get_correct_response();
+        $answer = $question->get_matching_answer($correct_response);
+        if (!$answer){
             return '';
-        }
-    }
-    protected function hidden_fields(question_attempt $qa) {
-        $question         = $qa->get_question();
-        $hiddenfieldshtml = '';
-        $inputids         = new stdClass();
-        $responsefields   = array_keys($question->get_expected_data());
-        foreach ($responsefields as $responsefield) {
-            $hiddenfieldshtml .= $this->hidden_field_for_qt_var($qa, $responsefield);
-        }
-        return $hiddenfieldshtml;
-    }
-    protected function hidden_field_for_qt_var(question_attempt $qa, $varname) {
-        $value      = $qa->get_last_qt_var($varname, '');
-        $fieldname  = $qa->get_qt_field_name($varname);
-        $attributes = array(
-            'type' => 'hidden',
-            'id' => str_replace(':', '_', $fieldname),
-            'class' => $varname,
-            'name' => $fieldname,
-            'value' => $value
-        );
-        return html_writer::empty_tag('input', $attributes);
+        }  
+        $answerinput = html_writer::empty_tag('input',
+                        array(
+                    'type' => 'hidden',
+                    'name' => $qa->get_qt_field_name('correctanswer'),
+                    'value' => $correct_response['answer']
+        ));
+        $show_button =  html_writer::empty_tag('input',
+                        array(
+                    'type' => 'button',
+                    'name' => $qa->get_qt_field_name('showcorrectanswer'),
+                    'value' => get_string('correct_answer', 'qtype_easyonamejs'),
+                    'data-label-my' => get_string('my_answer', 'qtype_easyonamejs'),
+                    'data-label-correct' => get_string('correct_answer', 'qtype_easyonamejs')
+        ));
+        return $answerinput . $show_button;
+        
+        
     }
 }

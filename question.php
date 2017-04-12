@@ -28,23 +28,60 @@ $PAGE->requires->strings_for_js(array('viewing_answer1', 'viewing_answer'), 'qty
 
 class qtype_easyonamejs_question extends qtype_shortanswer_question {
     public function compare_response_with_answer(array $response, question_answer $answer) {
-        // Check to see if correct or not.
-        $usrsmiles = $this->openbabel_convert_molfile($response['answer'], 'can');
-        $anssmiles = $this->openbabel_convert_molfile($answer->answer, 'can');
-
-        if ($usrsmiles == $anssmiles) {
-            return true;
-        } else {
+        if (!array_key_exists('answer', $response) || is_null($response['answer'])) {
             return false;
         }
+        $usrsmiles = isset($response["smiles"]) ? $response["smiles"] : null;
+        $anssmiles = isset($answer->smiles) ? $answer->smiles :null;
+        
+        // JChem webservices
+        $marvinjsconfig = get_config('qtype_easyonamejs');
+        if ($marvinjsconfig->usews){
+            if ($usrsmiles == null){
+                $usrsmiles = $this->call_webservices_smiles($response['answer']);
+            }
+            if (!$anssmiles){
+                $anssmiles = $this->call_webservices_smiles($answer->answer);
+                // TODO save answer to database with converted smiles
+            }
+            
+        }
+        // babel
+        else{
+            $usrsmiles = $usrsmiles ? $usrsmiles : $this->openbabel_convert_molfile($response['answer'], 'can');
+            if ($anssmiles == null){
+                $anssmiles = $this->openbabel_convert_molfile($answer->answer, 'can');
+                // TODO save answer to database with converted smiles
+            }
+        }
+        // Check to see if correct or not.
+        return $usrsmiles == $anssmiles;
     }
     public function get_expected_data() {
         return array(
-            'answer' => PARAM_RAW,
-            'easyonamejs' => PARAM_RAW,
-            'mol' => PARAM_RAW
+            'answer' => PARAM_RAW
         );
     }
+    public function get_correct_response() {
+        // need to skip trimming of answer, which happens in parent class
+        return question_graded_by_strategy::get_correct_response();
+    }
+    public function call_webservices_smiles($mol) {
+        $marvinjsconfig = get_config('qtype_easyonamejs');
+        $url = $marvinjsconfig->wsurl . '/rest-v0/util/calculate/stringMolExport';
+        $data = array('structure' => $mol, 'parameters' => 'cxsmiles');
+        $options = array(
+            'http' => array(
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data, "", "&")
+            )
+        );
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+        return $result;
+    }
+
     public function openbabel_convert_molfile($molfile, $format) {
         $marvinjsconfig = get_config('qtype_easyonamejs_options');
         $descriptorspec = array(
