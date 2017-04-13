@@ -62,7 +62,7 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
         $iframe = html_writer::start_tag('div', array('id' => $qa->get_qt_field_name('applet'), 'class' => 'easyonamejs resizable'));
         $loading = html_writer::div(get_string('loading', 'qtype_easyonamejs'), 'loading');
         $iframe .= html_writer::div($loading, 'marvin-overlay');
-        $editor_attributes = array('id' => 'MSketch', 'class' => 'sketcher-frame ' . $feedbackclass,
+        $editor_attributes = array('id' => $qa->get_qt_field_name('marvinjs'), 'class' => 'sketcher-frame ' . $feedbackclass,
             'src' => $marvinjspath . '/editor.html');
         if ($marvinjsconfig->usews) {
             $editor_attributes['src'] = $marvinjspath . '/editorws.html';
@@ -127,7 +127,6 @@ class qtype_easyonamejs_renderer extends qtype_renderer {
         $defaultsettings = isset($question->marvinsettings) && trim($question->marvinsettings) ? $question->marvinsettings : $marvinjsconfig->defaultsettings;
         $PAGE->requires->js_call_amd('qtype_easyonamejs/marvincontrols', 'initquestion',
                 array(array('editorid' => $editor_attributes['id'],
-                    'answerinputid' => $answerinputid,
                     'defaultsettings'=>$defaultsettings)));   
         return $result;
     }

@@ -66,3 +66,15 @@ $string['view'] = 'View in editor';
 $string['delete'] = 'Delete';
 $string['correct_answer'] = 'Show correct Answer';
 $string['my_answer'] = 'Show my answer';
+
+$string['initfailure'] = 'Initialization of MarvinJS editor was not successful, please contact your admin.';
+$string['initfailuretitle'] = 'MarvinJS initialization failure!';
+
+$string['importfailure'] = 'Import of structure to MarvinJS was not successful, please contact your admin.';
+$string['importfailuretitle'] = 'Cannot import structure to MarvinJS';
+
+$string['importfailure'] = 'Export of structure to MarvinJS was not successful, question won\'t work as expected, please contact your admin.';
+$string['exportfailuretitle'] = 'Cannot export structure from MarvinJS';
+
+$string['marvinsettingsimportfailure'] = 'Json with settings seems to be corrupted. MarvinJS was not able to import it. Try to check syntax, or set settings in editor and import.';
+$string['marvinsettingsimportfailuretitle'] = 'Cannot set these settings to MarvinJS.';

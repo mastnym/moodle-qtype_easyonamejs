@@ -7,20 +7,30 @@
  /**
   * @module qtype_easyonamejs/marvincontrols
   */
-define(['jquery'], function($) {
-    var sketcher = null;
-    var package = null;
+define(['jquery','core/notification', 'core/str'], function($, notification, str) {
+    var marvinpackage = null;
     var webservicesurl = null;
     var answer_regex = /answer\[(\d+)\]/;
     
-    var generateImage = function(answerinput){ 
+    
+    var generateImage = function(answerinput, displaysettings){ 
         var answernumber = answer_regex.exec(answerinput.attr("name"))[1];
         if (answerinput.val().trim() !== '') {
-            var imgData = package.ImageExporter.molToDataUrl(answerinput.val(), "image/png", sketcher.getDisplaySettings());
+            var imgData = marvinpackage.ImageExporter.molToDataUrl(answerinput.val(), "image/png", displaysettings);
             $("#fgroup_id_answeroptions_" + answernumber).find(".marvin-image:first").attr("src", imgData);
             answerinput.trigger('change');
         }
     };
+    var failure = function(type, err){ 
+        str.get_strings([{key: type + 'failuretitle', component: 'qtype_easyonamejs'},
+            {key: type + 'failure', component: 'qtype_easyonamejs'}]).done(
+                function (s) {
+                    notification.alert(s[0], s[1] + "<br/>" + err, 'Ok');
+                }
+        ).fail(notification.exception);
+    };
+    
+    
     return {
        /** 
         * Initialize MarvinJS on add/edit question page
@@ -29,21 +39,22 @@ define(['jquery'], function($) {
         */
         initedit: function(params){
             $(document).ready(function(){
-                webservicesurl = params.wsurl.endsWith("/") ? params.wsurl : params.wsurl + '/';
+                webservicesurl = webservicesurl || params.wsurl.endsWith("/") ? params.wsurl : params.wsurl + '/';
                 window.MarvinJSUtil.getEditor(params.editorid).then(function (sketcherInstance) {
-                    sketcher = sketcherInstance;
                     $(".marvin-overlay").remove();
                     if (params.defaultsettings){
                         var defaultsettings = window.JSON.parse(params.defaultsettings);
-                        sketcher.setDisplaySettings(defaultsettings);
+                        sketcherInstance.setDisplaySettings(defaultsettings);
                     }
-                    sketcher.importStructure("mol", $("input[name=answer\\[0\\]]").val());
+                    sketcherInstance.importStructure("mol", $("input[name=answer\\[0\\]]").val()).then(null, function (err) {
+                        failure('import', err);
+                    });
                     //export answer to textarea
                     $("body").on("click", "input.id_insert", function(){
                         var answernumber = $(this).attr("id").replace("id_insert_", "");
-                        sketcher.exportStructure("mol").then(function(struct){
+                        sketcherInstance.exportStructure("mol").then(function(struct){
                             var answerinput = $("input[name=answer\\["+ answernumber + "\\]]").val(struct).trigger('change');
-                            generateImage(answerinput);
+                            generateImage(answerinput, sketcherInstance.getDisplaySettings());
 //                            if (params.usews && webservicesurl){
 //                                $.post(webservicesurl + 'rest-v0/util/calculate/stringMolExport', {
 //                                    "structure": struct,
@@ -52,17 +63,21 @@ define(['jquery'], function($) {
 //                                    $("input[name=answer_smiles\\["+answernumber+"\\]]").val(data);
 //                                });
 //                            }
+                        }, function(err){
+                            failure('export', err);
                         });              
                     });
                     // adjust buttons on molchange
-                    sketcher.on("molchange", function(){
+                    sketcherInstance.on("molchange", function(){
                         $("input.mol-answer").trigger("change");
                     });
                     // load answer to editor
                     $("body").on("click", "input.id_view", function(){
                         var answernumber = $(this).attr("id").replace("id_view_", "");
                         var mol = $("input[name=answer\\["+ answernumber + "\\]]").val();
-                        sketcher.importStructure("mol", mol);         
+                        sketcherInstance.importStructure("mol", mol).then(null, function(err){
+                                failure('import', err);
+                            });         
                     });
                     // delete answer
                     $("body").on("click", "input.id_delete", function(){
@@ -81,7 +96,7 @@ define(['jquery'], function($) {
                     });
                     // use current editor settings as question settings
                     $("#id_marvinsettingsget").click(function(){
-                        $("#id_marvinsettings").val(window.JSON.stringify(sketcher.getDisplaySettings())).trigger("change");
+                        $("#id_marvinsettings").val(window.JSON.stringify(sketcherInstance.getDisplaySettings())).trigger("change");
                     });
                     // enable/disable setting options to editor
                     $("body").on("change textInput input", "#id_marvinsettings", function(){
@@ -97,63 +112,80 @@ define(['jquery'], function($) {
                         if (settings.trim()){
                             try{
                                 var settingsobj = window.JSON.parse(settings);
-                                sketcher.setDisplaySettings(settingsobj);
+                                sketcherInstance.setDisplaySettings(settingsobj);
                             }catch(err){
-                                window.console.log(err);
+                                failure('marvinsettingsimport', err);
                             }
                         }
                     });
+
+                    // create images from answers and register click
+                    window.MarvinJSUtil.getPackage(params.editorid).then(function (package) {
+                        $(".mol-answer").each(function () {
+                            marvinpackage = package;
+                            generateImage($(this), sketcherInstance.getDisplaySettings());
+                            $(this).trigger('change');
+                        });
+                    }, function (err) {
+                        failure('init', err);
+                    });
+                    
                     $("#id_marvinsettings").trigger("change");
                     if ($("#id_marvinsettings").val().trim() !== ''){
                         $("#id_marvinsettingsset").trigger("click");
                     }
                     
+                }, function(err){
+                    failure('init', err);
                 });
-                // create images from answers and register click
-                window.MarvinJSUtil.getPackage(params.editorid).then(function (marvin_package) {
-                    package = marvin_package;
-                    $(".mol-answer").each(function () {
-                        generateImage($(this));
-                        $(this).trigger('change');
-                    });
-                });      
+                    
             });     
         },
         initquestion: function(params){
+            var qaid = params.editorid.replace("_marvinjs", "");
+            var qaid_selector = qaid.replace(":", "\\:");
+            var answer_input = $("#"+qaid_selector+"_answer");
             $(document).ready(function(){
                 window.MarvinJSUtil.getEditor(params.editorid).then(function (sketcherInstance) {
-                    sketcher = sketcherInstance;
-                    $(".marvin-overlay").remove();
+                    //remove overlay - editor is loaded
+                    $("#"+ qaid_selector + "_applet div.marvin-overlay").remove();
                     if (params.defaultsettings){
                         var defaultsettings = window.JSON.parse(params.defaultsettings);
-                        sketcher.setDisplaySettings(defaultsettings);
+                        sketcherInstance.setDisplaySettings(defaultsettings);
                     }
+                    // import molecule from last attempt if present
+                    if (answer_input.val().trim() !== ''){
+                        sketcherInstance.importStructure('mol', answer_input.val()).then(null, function (err) {
+                            failure('import', err);
+                        });
+                    }
+                    
                     // listen for molecule change
-                    sketcher.on("molchange", function(){
-                        if (!sketcher.isEmpty()){   
-                            sketcher.exportStructure("mol").then(function(struct){
+                    sketcherInstance.on("molchange", function(){
+                        if (!sketcherInstance.isEmpty()) {
+                            sketcherInstance.exportStructure("mol").then(function (struct) {
                                 answer_input.val(struct);
+                            }, function (err) {
+                                failure('export', err);
                             });
                         }
                     });
-                    var answer_input = $(document.getElementById(params.answerinputid));
-                    if (answer_input.val().trim() !== ''){
-                        sketcher.importStructure('mol', answer_input.val());
-                    }
-                    
-                    $("body").on('click', 'input[name$=_showcorrectanswer]', function(){
-                        var qnum = $(this).attr("name").replace("_showcorrectanswer", '');
-                        var qnumselector = qnum.replace(":","\\:")
-                        var correct_answer = $("input[name="+qnumselector+"_correctanswer]");
-                        var answer = $("input[name="+qnumselector+"_currentanswer]");
+                               
+                    $("body").on('click', 'input[name$='+qaid_selector+'_showcorrectanswer]', function(){
+                        var correct_answer = $("input[name="+qaid_selector+"_correctanswer]");
+                        var current_answer = $("input[name="+qaid_selector+"_currentanswer]");
                         var myanswerlabel = $(this).data("label-my");
                         var correctanswerlabel = $(this).data("label-correct");
                         // showcorrect answer
                         if ($(this).val() === correctanswerlabel){
-                            sketcher.importStructure('mol', correct_answer.val())
+                            sketcherInstance.importStructure('mol', correct_answer.val()).then(null, function(err){
+                                failure('import', err);
+                            });
                             $(this).val(myanswerlabel);
                         }else{
-                            sketcher.importStructure('mol', answer.val());
+                            sketcherInstance.importStructure('mol', current_answer.val()).then(null, function(err){
+                                failure('import', err);
+                            });
                             $(this).val(correctanswerlabel);
                         }
                     });
@@ -165,11 +197,10 @@ define(['jquery'], function($) {
                         mjsiframe.contents().find(".mjs-canvas").css("background-color", "#f2dede");
                     }else if(mjsiframe.hasClass('partiallycorrect')){
                         mjsiframe.contents().find(".mjs-canvas").css("background-color", "#fcf8e3");
-                    } 
-                    
-                });
-                
-                
+                    }     
+                }, function(err){   
+                    failure('init', err);
+                });    
             });
         }
     };
