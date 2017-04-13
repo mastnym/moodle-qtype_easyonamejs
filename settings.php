@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die;
-
+$PAGE->requires->js_call_amd('qtype_easyonamejs/marvincontrols', 'initsettings'); 
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('qtype_easyonamejs/path',
                    get_string('easyonamejs_options', 'qtype_easyonamejs'),
@@ -35,7 +35,7 @@ if ($ADMIN->fulltree) {
     
     $settings->add(new admin_setting_configtext('qtype_easyonamejs/wsurl',
                    get_string('easyonamejs_options_wsurl', 'qtype_easyonamejs'),
-                   get_string('easyonamejs_options_wsurl_desc', 'qtype_easyonamejs'), '/webservices', PARAM_TEXT));
+                   get_string('easyonamejs_options_wsurl_desc', 'qtype_easyonamejs'), '', PARAM_URL));
     
     $settings->add(new admin_setting_configtext('qtype_easyonamejs/obabelpath',
                    get_string('easyonamejsobabel_options', 'qtype_easyonamejs'),
@@ -44,5 +44,6 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtextarea('qtype_easyonamejs/defaultsettings',
                    get_string('easyonamejsobabel_options_default_settings', 'qtype_easyonamejs'),
                    get_string('easyonamejsobabel_options_default_settings_desc', 'qtype_easyonamejs'), '', PARAM_TEXT));
+    
     
 }

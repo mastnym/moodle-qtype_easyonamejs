@@ -30,7 +30,7 @@ $string['easyonamejsobabel_options'] = 'Path to OpenBabel installation';
 $string['easyonamejs_options_usews'] = 'Use chemaxon webservices?';
 $string['easyonamejs_options_usews_desc'] = 'If checked Chemaxon webservices will be used as a main conversion tool. You need to have Chemaxon webservices properly set up (webservices.js file in MarvinJS folder)';
 $string['easyonamejs_options_wsurl'] = 'URL of Chemaxon webservices';
-$string['easyonamejs_options_wsurl_desc'] = 'This is the base URL for Chemaxon webservices, defaults to <code>/webservices</code>';
+$string['easyonamejs_options_wsurl_desc'] = 'This is the full URL for Chemaxon webservices, eg.: https://domain.com/webservices';
 $string['easyonamejsobabel_options_default_settings'] = 'Default display settings of MarvinJS editor';
 $string['easyonamejsobabel_options_default_settings_desc'] = 'Json string with default editor settings (each question allows separate editor settings). If empty, default editor settings will be used. Example: <code>{
 "cpkColoring": true,

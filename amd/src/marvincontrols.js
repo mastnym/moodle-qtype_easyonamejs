@@ -202,6 +202,14 @@ define(['jquery','core/notification', 'core/str'], function($, notification, str
                     failure('init', err);
                 });    
             });
+        },
+        initsettings: function(){
+            $(document).ready(function(){ 
+                $("#id_s_qtype_easyonamejs_usews").change(function(){
+                    $("#id_s_qtype_easyonamejs_wsurl").attr("disabled", !this.checked);
+                    $("#id_s_qtype_easyonamejs_obabelpath").attr("disabled", this.checked);
+                }).trigger("change");
+            });
         }
     };
 
