@@ -46,9 +46,13 @@ define(['jquery','core/notification', 'core/str'], function($, notification, str
                         var defaultsettings = window.JSON.parse(params.defaultsettings);
                         sketcherInstance.setDisplaySettings(defaultsettings);
                     }
-                    sketcherInstance.importStructure("mol", $("input[name=answer\\[0\\]]").val()).then(null, function (err) {
-                        failure('import', err);
-                    });
+                    var first_answer = $("input[name=answer\\[0\\]]").val();
+                    if (first_answer){
+                        sketcherInstance.importStructure("mol", first_answer).then(null, function (err) {
+                            failure('import', err);
+                        });
+                    }
+                    
                     //export answer to textarea
                     $("body").on("click", "input.id_insert", function(){
                         var answernumber = $(this).attr("id").replace("id_insert_", "");
@@ -61,7 +65,7 @@ define(['jquery','core/notification', 'core/str'], function($, notification, str
 //                                    "parameters": "cxsmiles"
 //                                }).done(function(data){
 //                                    $("input[name=answer_smiles\\["+answernumber+"\\]]").val(data);
-//                                });
+//                                }); 
 //                            }
                         }, function(err){
                             failure('export', err);
