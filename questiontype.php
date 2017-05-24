@@ -43,4 +43,22 @@ class qtype_easyonamejs extends qtype_shortanswer {
         //do not trim exported molfile molfile call grandparent
         return question_type::fill_answer_fields($answer, $questiondata, $key, $context);
     }
+    public function import_from_xml($data, $question, \qformat_xml $format, $extra = null) {
+        $qo = parent::import_from_xml($data, $question, $format, $extra);
+        $new_answers = array();
+        foreach ($qo->answer as $mol){
+            $new_answers[] = str_replace("##first_chars##", "", $mol);
+        }
+        $qo->answer = $new_answers;
+        return $qo;
+    }
+    public function export_to_xml($question, \qformat_xml $format, $extra = null) {
+        foreach ($question->options->answers as $answer){
+            // need to prepend string for export which is then striped out during import
+            // question may begin with empty line/whitespace and we want to preserve these
+            // there is no other reasonable way to hook
+            $answer->answer = "##first_chars##" . $answer->answer;
+        }
+        return parent::export_to_xml($question, $format, $extra);
+    }
 }
